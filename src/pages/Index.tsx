@@ -4,13 +4,23 @@ import { ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import MassageCard from "@/components/MassageCard";
+import MassageDetailDialog from "@/components/MassageDetailDialog";
 import BookingForm from "@/components/BookingForm";
 import Footer from "@/components/Footer";
-import { massages } from "@/data/massages";
+import { massages, Massage } from "@/data/massages";
+import { useState } from "react";
 
 const Index = () => {
+  const [selectedMassage, setSelectedMassage] = useState<Massage | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const featuredMassages = massages.filter((m) => m.featured).slice(0, 6);
   const popularMassages = massages.filter((m) => m.popular);
+
+  const handleMassageClick = (massage: Massage) => {
+    setSelectedMassage(massage);
+    setDialogOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -33,10 +43,8 @@ const Index = () => {
             {featuredMassages.map((massage) => (
               <MassageCard
                 key={massage.id}
-                name={massage.name}
-                description={massage.description}
-                tags={massage.tags}
-                image={massage.image}
+                massage={massage}
+                onDetailsClick={handleMassageClick}
               />
             ))}
           </div>
@@ -68,10 +76,8 @@ const Index = () => {
             {popularMassages.map((massage) => (
               <MassageCard
                 key={massage.id}
-                name={massage.name}
-                description={massage.description}
-                tags={massage.tags}
-                image={massage.image}
+                massage={massage}
+                onDetailsClick={handleMassageClick}
               />
             ))}
           </div>
@@ -80,6 +86,12 @@ const Index = () => {
 
       <BookingForm />
       <Footer />
+
+      <MassageDetailDialog
+        massage={selectedMassage}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
     </div>
   );
 };
