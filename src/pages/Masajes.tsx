@@ -1,12 +1,22 @@
 import Header from "@/components/Header";
 import MassageCard from "@/components/MassageCard";
+import MassageDetailDialog from "@/components/MassageDetailDialog";
 import Footer from "@/components/Footer";
-import { massages } from "@/data/massages";
+import { massages, Massage } from "@/data/massages";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const Masajes = () => {
+  const [selectedMassage, setSelectedMassage] = useState<Massage | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleMassageClick = (massage: Massage) => {
+    setSelectedMassage(massage);
+    setDialogOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -35,10 +45,8 @@ const Masajes = () => {
             {massages.map((massage) => (
               <MassageCard
                 key={massage.id}
-                name={massage.name}
-                description={massage.description}
-                tags={massage.tags}
-                image={massage.image}
+                massage={massage}
+                onDetailsClick={handleMassageClick}
               />
             ))}
           </div>
@@ -46,6 +54,12 @@ const Masajes = () => {
       </section>
 
       <Footer />
+
+      <MassageDetailDialog
+        massage={selectedMassage}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
     </div>
   );
 };
